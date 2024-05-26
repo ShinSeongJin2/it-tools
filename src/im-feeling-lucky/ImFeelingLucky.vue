@@ -3,23 +3,36 @@ import { storeToRefs } from 'pinia';
 import { useCommandPaletteStore } from '@/modules/command-palette/command-palette.store';
 import { useRouter } from 'vue-router';
 
+// #region URL로 전달된 searchToolName 검색어 얻기
 const props = withDefaults(defineProps<{ searchToolName?: string }>(), { searchToolName: () => '' });
 const { searchToolName } = toRefs(props);
+const searchToolNameValue = searchToolName.value
+// #endregion
 
-const commandPaletteStore = useCommandPaletteStore();
-const { searchPrompt, filteredSearchResult } = storeToRefs(commandPaletteStore);
+try {
 
-searchPrompt.value = searchToolName.value
-console.log(filteredSearchResult.value)
-console.log(filteredSearchResult.value["Tools"][0]["path"])
+    // #region searchToolName로 가장 연관성있는 tool의 경로 얻기
+    const commandPaletteStore = useCommandPaletteStore();
+    const { searchPrompt, filteredSearchResult } = storeToRefs(commandPaletteStore);
 
-const matchedPath = filteredSearchResult.value["Tools"][0]["path"]
+    searchPrompt.value = searchToolNameValue
+    if(!(filteredSearchResult.value) || !(filteredSearchResult.value["Tools"])
+        || filteredSearchResult.value["Tools"].length === 0) {
+        throw new Error("No tool found")
+    }
 
-const router = useRouter();
-router.push(matchedPath).catch(err => {
-    console.error('Failed to navigate:', err);
-  });
+    const mustRelatedToolPath = filteredSearchResult.value["Tools"][0]["path"]
+    // #endregion
 
+    // #region 가장 연관성있는 tool로 이동
+    const router = useRouter()
+    router.push(mustRelatedToolPath)
+    // #endregion
+
+} catch (error) {
+    console.error(error)
+    alert(error)
+}
 </script>
 
 <template>
