@@ -1,8 +1,12 @@
 # build stage
 FROM node:lts-alpine AS build-stage
+
 # Set environment variables for non-interactive npm installs
 ENV NPM_CONFIG_LOGLEVEL warn
 ENV CI true
+# 힙 메모리 초과 에러를 해결하기 위해서
+ENV NODE_OPTIONS=--max_old_space_size=4096
+
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm && pnpm i --frozen-lockfile
