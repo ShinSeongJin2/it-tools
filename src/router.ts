@@ -5,6 +5,7 @@ import NotFound from './pages/404.page.vue';
 import { tools } from './tools';
 import { config } from './config';
 import { routes as demoRoutes } from './ui/demo/demo.routes';
+import ImFeelingLucky from './im-feeling-lucky/ImFeelingLucky.vue';
 
 const toolsRoutes = tools.map(({ path, name, component, ...config }) => ({
   path,
@@ -34,6 +35,11 @@ const router = createRouter({
     ...toolsRoutes,
     ...toolsRedirectRoutes,
     ...(config.app.env === 'development' ? demoRoutes : []),
+    {
+      path: '/im-feeling-lucky',
+      name: 'imFeelingLucky',
+      component: ImFeelingLucky,
+    },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
   ],
 });
