@@ -32,14 +32,15 @@ const router = createRouter({
       name: 'about',
       component: () => import('./pages/About.vue'),
     },
+    {
+      path: '/im-feeling-lucky/:searchToolName',
+      name: 'imFeelingLucky',
+      component: ImFeelingLucky,
+      props: true
+    },
     ...toolsRoutes,
     ...toolsRedirectRoutes,
     ...(config.app.env === 'development' ? demoRoutes : []),
-    {
-      path: '/im-feeling-lucky',
-      name: 'imFeelingLucky',
-      component: ImFeelingLucky,
-    },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
   ],
 });
